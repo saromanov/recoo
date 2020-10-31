@@ -1,4 +1,4 @@
-package recoo
+package build
 
 import (
 	"fmt"
