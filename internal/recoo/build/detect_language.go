@@ -10,9 +10,9 @@ import (
 
 type Language string
 
-var (
-	GO      Language = iota
-	Unknown Language
+const (
+	GO Language = iota
+	Unknown
 )
 
 // detectLanguage provides detecting of programming language
