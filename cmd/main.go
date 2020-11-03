@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/saromanov/recoo/internal/config"
+	"github.com/saromanov/recoo/internal/core"
 	"github.com/sirupsen/logrus"
 )
 
@@ -13,5 +14,7 @@ func main() {
 	if cfg == nil {
 		logrus.Fatalf("unable to load config")
 	}
+
+	core.New(cfg)
 
 }
