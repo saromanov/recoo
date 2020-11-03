@@ -1,6 +1,8 @@
 package main
 
 import (
+	"context"
+
 	"github.com/saromanov/recoo/internal/config"
 	"github.com/saromanov/recoo/internal/core"
 	"github.com/sirupsen/logrus"
@@ -15,6 +17,9 @@ func main() {
 		logrus.Fatalf("unable to load config")
 	}
 
-	core.New(cfg)
+	c := core.New(cfg)
+	if err := c.Start(context.Background()); err != nil {
+		logrus.WithError(err).Fatalf("unable to start pipeline")
+	}
 
 }

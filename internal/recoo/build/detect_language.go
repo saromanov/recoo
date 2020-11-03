@@ -8,7 +8,7 @@ import (
 	"github.com/go-enry/go-enry/v2"
 )
 
-type Language string
+type Language int
 
 const (
 	GO Language = iota

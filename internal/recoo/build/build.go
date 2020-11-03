@@ -7,7 +7,7 @@ import (
 )
 
 // Run starts build phase
-func Run(cfg *config.Build) error {
+func Run(cfg config.Build) error {
 	if cfg.Entryfile == "" {
 		return fmt.Errorf("entryfile is not defined")
 	}
