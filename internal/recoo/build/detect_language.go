@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	"github.com/go-enry/go-enry/v2"
 )
@@ -21,8 +22,11 @@ func detectLanguage(path string) (Language, error) {
 	if err != nil {
 		return Unknown, fmt.Errorf("unable to read file: %v", err)
 	}
-	lang, _ := enry.GetLanguageByContent("", d)
-	switch lang {
+	langs := enry.GetLanguagesByExtension(filepath.Base(path), d, nil)
+	if len(langs) > 1 {
+		return Unknown, fmt.Errorf("unable to detect one language: %v", langs)
+	}
+	switch langs[0] {
 	case "Go":
 		return GO, nil
 	}
