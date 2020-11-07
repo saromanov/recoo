@@ -16,6 +16,8 @@ func Run(cfg config.Build) error {
 	if err != nil {
 		return fmt.Errorf("unable to detect language: %v", err)
 	}
-	fmt.Println(lang)
+	if err := createDockerfile(cfg, lang); err != nil {
+		return fmt.Errorf("unable to create dockerfile: %v", err)
+	}
 	return nil
 }
