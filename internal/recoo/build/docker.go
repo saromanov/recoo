@@ -17,9 +17,12 @@ func createDockerfile(cfg config.Build, lang Language) error {
 
 // generateDockerfile provides generating of Dockerfiloe based on language
 func generateDockerfile(cfg config.Build) string {
-	data := fmt.Sprintf("FROM %s", cfg.Image)
-	data += fmt.Sprintf("go build -o app %s", cfg.Entryfile)
-	data += "WORKDIR app"
-	data += "CMD app"
+	data := fmt.Sprintf("FROM %s\n", cfg.Image)
+	data += fmt.Sprintf("ADD . /app\n")
+	data += "WORKDIR /app\n"
+	data += "RUN ls -la\n"
+	data += fmt.Sprintf("RUN go mod download\n")
+	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entryfile)
+	data += "ENTRYPOINT [ /bin/app ]"
 	return data
 }
