@@ -31,12 +31,12 @@ func buildImage(client *client.Client, tags []string, dockerfile string) error {
 
 	dockerFileReader, err := os.Open(dockerfile)
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to open Dockerfile: %v", err)
 	}
 
 	readDockerFile, err := ioutil.ReadAll(dockerFileReader)
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to read Dockerfile: %v", err)
 	}
 
 	tarHeader := &tar.Header{
@@ -70,13 +70,13 @@ func buildImage(client *client.Client, tags []string, dockerfile string) error {
 	)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to build Dockerfile: %v", err)
 	}
 
 	defer imageBuildResponse.Body.Close()
 	_, err = io.Copy(os.Stdout, imageBuildResponse.Body)
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to apply copy: %v", err)
 	}
 
 	return nil
