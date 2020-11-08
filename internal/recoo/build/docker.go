@@ -19,53 +19,44 @@ func createDockerfile(cfg config.Build, lang Language) error {
 	if err := ioutil.WriteFile("Dockerfile", []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
 	}
+
+	if err := buildImage([]string{"1.0"}, "recoo.tar.gz"); err != nil {
+		return fmt.Errorf("unable to build image: %v", err)
+	}
+	if err := os.Remove("Dockerfile"); err != nil {
+		return fmt.Errorf("unable to remove Dockerfile: %v", err)
+	}
 	return nil
 }
 
-func buildImage(client *client.Client, tags []string, dockerfile string) error {
+func buildImage(tags []string, buildContext string) error {
+	client, err := client.NewEnvClient()
+	if err != nil {
+		return fmt.Errorf("unable to init Docker client")
+	}
+
 	ctx := context.Background()
 
 	buf := new(bytes.Buffer)
 	tw := tar.NewWriter(buf)
 	defer tw.Close()
 
-	dockerFileReader, err := os.Open(dockerfile)
+	buildContextReader, err := os.Open(buildContext)
 	if err != nil {
-		return fmt.Errorf("unable to open Dockerfile: %v", err)
+		return fmt.Errorf("unable to open build context file: %v", err)
 	}
-
-	readDockerFile, err := ioutil.ReadAll(dockerFileReader)
-	if err != nil {
-		return fmt.Errorf("unable to read Dockerfile: %v", err)
-	}
-
-	tarHeader := &tar.Header{
-		Name: dockerfile,
-		Size: int64(len(readDockerFile)),
-	}
-
-	err = tw.WriteHeader(tarHeader)
-	if err != nil {
-		return err
-	}
-
-	_, err = tw.Write(readDockerFile)
-	if err != nil {
-		return err
-	}
-
-	dockerFileTarReader := bytes.NewReader(buf.Bytes())
 
 	buildOptions := types.ImageBuildOptions{
-		Context:    dockerFileTarReader,
-		Dockerfile: dockerfile,
+		Context:    buildContextReader,
+		Dockerfile: "Dockerfile",
 		Remove:     true,
 		Tags:       tags,
+		NoCache:    true,
 	}
 
 	imageBuildResponse, err := client.ImageBuild(
 		ctx,
-		dockerFileTarReader,
+		buildContextReader,
 		buildOptions,
 	)
 
@@ -86,6 +77,7 @@ func buildImage(client *client.Client, tags []string, dockerfile string) error {
 // https://semaphoreci.com/community/tutorials/how-to-deploy-a-go-web-application-with-docker
 func generateDockerfile(cfg config.Build) string {
 	data := fmt.Sprintf("FROM %s\n", cfg.Image)
+	data += "RUN ls -la\n"
 	data += fmt.Sprintf("ADD . /app\n")
 	data += "WORKDIR /app\n"
 	data += "RUN ls -la\n"
