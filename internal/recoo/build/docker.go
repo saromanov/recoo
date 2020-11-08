@@ -20,12 +20,21 @@ func createDockerfile(cfg config.Build, lang Language) error {
 		return fmt.Errorf("unable to write file: %v", err)
 	}
 
+	if err := archiveBuildContext(); err != nil {
+		return fmt.Errorf("unable to archive build context: %v", err)
+	}
 	if err := buildImage([]string{"1.0"}, "recoo.tar.gz"); err != nil {
 		return fmt.Errorf("unable to build image: %v", err)
 	}
 	if err := os.Remove("Dockerfile"); err != nil {
 		return fmt.Errorf("unable to remove Dockerfile: %v", err)
 	}
+	return nil
+}
+
+// archiveContext provides arhciving of directory for build context
+// output should be name.tar.gz
+func archiveBuildContext() error {
 	return nil
 }
 
