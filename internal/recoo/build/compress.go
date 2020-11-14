@@ -2,7 +2,9 @@ package build
 
 import (
 	"archive/tar"
+	"bytes"
 	"compress/gzip"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -10,12 +12,23 @@ import (
 )
 
 // GZip provides compress of the target directory
-func GZip() {
+func GZip(path string) error {
+	var buf bytes.Buffer
+	if err := compress(path, &buf); err != nil {
+		return fmt.Errorf("unable to compress file: %v", err)
+	}
 
+	fileToWrite, err := os.OpenFile("./exanple.tar.gzip", os.O_CREATE|os.O_RDWR, os.FileMode(600))
+	if err != nil {
+		return fmt.Errorf("unable to write to file: %v", err)
+	}
+	if _, err := io.Copy(fileToWrite, &buf); err != nil {
+		return fmt.Errorf("unable to copy to file: %v", err)
+	}
+	return nil
 }
 
 func compress(src string, buf io.Writer) error {
-	// tar > gzip > buf
 	zr := gzip.NewWriter(buf)
 	tw := tar.NewWriter(zr)
 
