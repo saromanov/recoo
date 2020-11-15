@@ -14,6 +14,8 @@ import (
 	"github.com/saromanov/recoo/internal/config"
 )
 
+// https://medium.com/@Frikkylikeme/controlling-docker-with-golang-code-b213d9699998
+
 func createDockerfile(cfg config.Build, lang Language) error {
 	data := generateDockerfile(cfg)
 	if err := ioutil.WriteFile("Dockerfile", []byte(data), 0644); err != nil {
@@ -23,11 +25,14 @@ func createDockerfile(cfg config.Build, lang Language) error {
 	if err := archiveBuildContext(); err != nil {
 		return fmt.Errorf("unable to archive build context: %v", err)
 	}
-	if err := buildImage([]string{"1.0"}, "recoo.tar.gz"); err != nil {
+	if err := buildImage([]string{"1.0"}, "recoo.tar.gzip"); err != nil {
 		return fmt.Errorf("unable to build image: %v", err)
 	}
 	if err := os.Remove("Dockerfile"); err != nil {
 		return fmt.Errorf("unable to remove Dockerfile: %v", err)
+	}
+	if err := os.Remove("./recoo.tar.gzip"); err != nil {
+		return fmt.Errorf("unable to remove archive: %v", err)
 	}
 	return nil
 }
@@ -35,6 +40,9 @@ func createDockerfile(cfg config.Build, lang Language) error {
 // archiveContext provides arhciving of directory for build context
 // output should be name.tar.gz
 func archiveBuildContext() error {
+	if err := compress("."); err != nil {
+		return fmt.Errorf("unable to compress file: %v", err)
+	}
 	return nil
 }
 
