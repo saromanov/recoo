@@ -8,8 +8,8 @@ import (
 
 // Config defines configuration
 type Config struct {
-	Build   Build   `yaml:"build"`
-	Release Release `yaml:"release"`
+	Build  Build  `yaml:"build"`
+	Deploy Deploy `yaml:"deploy"`
 }
 
 // Build defined build stage
@@ -18,8 +18,8 @@ type Build struct {
 	Entryfile string `yaml:"entryfile"`
 }
 
-// Release defines stage for Release
-type Release struct {
+// Deploy defines stage for deploy
+type Deploy struct {
 	Provider string `yaml:"provider"`
 }
 

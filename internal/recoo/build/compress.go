@@ -12,13 +12,13 @@ import (
 )
 
 // comperss provides compress of the target directory
-func compress(path string) error {
+func compress(path, archivePath string) error {
 	var buf bytes.Buffer
 	if err := archive(path, &buf); err != nil {
 		return fmt.Errorf("unable to archive file: %v", err)
 	}
 
-	fileToWrite, err := os.OpenFile("./recoo.tar.gzip", os.O_CREATE|os.O_RDWR, os.FileMode(777))
+	fileToWrite, err := os.OpenFile(fmt.Sprintf("%s.tar.gzip", archivePath), os.O_CREATE|os.O_RDWR, os.FileMode(777))
 	if err != nil {
 		return fmt.Errorf("unable to write to file: %v", err)
 	}
