@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/saromanov/recoo/internal/recoo/build"
 	"github.com/saromanov/recoo/internal/config"
+	"github.com/saromanov/recoo/internal/recoo/build"
 )
 
 // Core defines main logic
