@@ -25,5 +25,8 @@ func (c *Core) Start(ctx context.Context) error {
 	if err := build.Run(c.cfg.Build); err != nil {
 		return fmt.Errorf("unable to execute build phase: %v", err)
 	}
+	if err := release.Run(c.cfg.Release); err != nil {
+		return fmt.Errorf("unable to execute release stage: %v", err)
+	}
 	return nil
 }

@@ -26,6 +26,14 @@ type Deploy struct {
 
 // Release defines release stage
 type Release struct {
+	Registry Registry `json:"registry"`
+}
+
+// Registry defines configuration for registry
+type Registry struct {
+	Login    string `json:"login"`
+	Password string `json:"password"`
+	URL      string `json:"url"`
 }
 
 // Load provides loading of config
