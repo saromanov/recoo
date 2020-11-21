@@ -8,7 +8,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"path/filepath"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -17,12 +16,7 @@ import (
 
 // https://medium.com/@Frikkylikeme/controlling-docker-with-golang-code-b213d9699998
 
-func createDockerfile(cfg config.Build, lang Language) error {
-	currentDir, err := os.Getwd()
-	if err != nil {
-		return fmt.Errorf("unable to get current dir: %v", err)
-	}
-	dirName := filepath.Base(currentDir)
+func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	data := generateDockerfile(cfg)
 	if err := ioutil.WriteFile("Dockerfile", []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
@@ -31,7 +25,7 @@ func createDockerfile(cfg config.Build, lang Language) error {
 	if err := archiveBuildContext(dirName); err != nil {
 		return fmt.Errorf("unable to archive build context: %v", err)
 	}
-	if err := buildImage([]string{"1.0"}, "recoo.tar.gzip"); err != nil {
+	if err := buildImage([]string{"recoo", "1.0"}, "recoo.tar.gzip"); err != nil {
 		return fmt.Errorf("unable to build image: %v", err)
 	}
 	if err := os.Remove("Dockerfile"); err != nil {
@@ -86,7 +80,6 @@ func buildImage(tags []string, buildContext string) error {
 	if err != nil {
 		return fmt.Errorf("unable to build Dockerfile: %v", err)
 	}
-
 	defer imageBuildResponse.Body.Close()
 	_, err = io.Copy(os.Stdout, imageBuildResponse.Body)
 	if err != nil {

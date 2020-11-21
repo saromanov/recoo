@@ -34,7 +34,7 @@ func imagePush(cfg config.Release, image string) error {
 		return err
 	}
 
-	err = cli.ImageTag(ctx, "alpine:3", "docker.io/jerrymannel/alpine:3")
+	err = cli.ImageTag(ctx, image, fmt.Sprintf("%s/%s", cfg.Registry.URL, image))
 	if err != nil {
 		return err
 	}
