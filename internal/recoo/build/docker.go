@@ -18,17 +18,17 @@ import (
 
 func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	data := generateDockerfile(cfg)
-	if err := ioutil.WriteFile("Dockerfile", []byte(data), 0644); err != nil {
+	const dockerfile = "Dockerfile"
+	if err := ioutil.WriteFile(dockerfile, []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
 	}
-
 	if err := archiveBuildContext(dirName); err != nil {
 		return fmt.Errorf("unable to archive build context: %v", err)
 	}
 	if err := buildImage([]string{dirName}, fmt.Sprintf("%s.tar.gzip", dirName)); err != nil {
 		return fmt.Errorf("unable to build image: %v", err)
 	}
-	if err := os.Remove("Dockerfile"); err != nil {
+	if err := os.Remove(dockerfile); err != nil {
 		return fmt.Errorf("unable to remove Dockerfile: %v", err)
 	}
 	if err := os.Remove(fmt.Sprintf("%s.tar.gzip", dirName)); err != nil {

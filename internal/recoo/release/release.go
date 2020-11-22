@@ -26,17 +26,18 @@ func Run(cfg config.Release, image string) error {
 	return imagePush(cfg, image)
 }
 
+// imagePush provides pushing of images
 func imagePush(cfg config.Release, image string) error {
 	ctx := context.Background()
 
 	cli, err := client.NewEnvClient()
 	if err != nil {
-		return err
+		return fmt.Errorf("unabel to make new env client: %v", err)
 	}
 
 	err = cli.ImageTag(ctx, image, fmt.Sprintf("%s/%s", cfg.Registry.URL, image))
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to make image tag: %v", err)
 	}
 
 	authConfig := types.AuthConfig{
@@ -45,7 +46,7 @@ func imagePush(cfg config.Release, image string) error {
 	}
 	encodedJSON, err := json.Marshal(authConfig)
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to marshal auth config: %v", err)
 	}
 	authStr := base64.URLEncoding.EncodeToString(encodedJSON)
 
@@ -53,7 +54,7 @@ func imagePush(cfg config.Release, image string) error {
 		RegistryAuth: authStr,
 	})
 	if err != nil {
-		return err
+		return fmt.Errorf("unable to push image: %v", err)
 	}
 	return nil
 
