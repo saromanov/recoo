@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -21,8 +22,8 @@ func Run(cfg config.Release, image string) error {
 		return fmt.Errorf("url to the registry is not defined")
 	}
 
-	cfg.Registry.Login = readEnv(cfg.Registry.Login)
-	cfg.Registry.Password = readEnv(cfg.Registry.Password)
+	cfg.Registry.Login = getVariable(cfg.Registry.Login)
+	cfg.Registry.Password = getVariable(cfg.Registry.Password)
 	return imagePush(cfg, image)
 }
 
@@ -59,6 +60,10 @@ func imagePush(cfg config.Release, image string) error {
 	return nil
 
 }
-func readEnv(data string) string {
-	return os.Getenv(data)
+
+func getVariable(data string) string {
+	if strings.HasPrefix(data, "$") {
+		return os.Getenv(data)
+	}
+	return data
 }
