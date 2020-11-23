@@ -7,6 +7,6 @@ type Service struct {
 }
 
 // New provides initialization on swarm
-func New() *deploy.Deploy {
+func New() deploy.Deploy {
 	return &Service{}
 }

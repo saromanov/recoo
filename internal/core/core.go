@@ -30,7 +30,9 @@ func (c *Core) Start(ctx context.Context) error {
 		return fmt.Errorf("unable to get current dir: %v", err)
 	}
 	dirName := filepath.Base(currentDir)
-
+	if dirName == "" {
+		return fmt.Errorf("unable to get dir name")
+	}
 	if err := build.Run(c.cfg.Build, dirName); err != nil {
 		return fmt.Errorf("unable to execute build phase: %v", err)
 	}
