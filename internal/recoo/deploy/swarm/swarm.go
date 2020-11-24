@@ -10,3 +10,7 @@ type Service struct {
 func New() deploy.Deploy {
 	return &Service{}
 }
+
+func (s *Service) Run() error {
+	return nil
+}

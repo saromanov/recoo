@@ -19,7 +19,7 @@ func main() {
 
 	c := core.New(cfg)
 	if err := c.Start(context.Background()); err != nil {
-		logrus.WithError(err).Fatalf("unable to start pipeline")
+		logrus.WithError(err).Fatalf("unable to execute pipeline")
 	}
 
 }
