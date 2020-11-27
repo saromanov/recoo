@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -36,7 +37,7 @@ func imagePush(cfg config.Release, image string) error {
 		return fmt.Errorf("unabel to make new env client: %v", err)
 	}
 
-	err = cli.ImageTag(ctx, image, "docker.hub.com/recoo")
+	err = cli.ImageTag(ctx, image, fmt.Sprintf("%s/%s/%s", cfg.Registry.URL, cfg.Registry.Login, image))
 	if err != nil {
 		return fmt.Errorf("unable to make image tag: %v", err)
 	}
@@ -51,12 +52,14 @@ func imagePush(cfg config.Release, image string) error {
 	}
 	authStr := base64.URLEncoding.EncodeToString(encodedJSON)
 
-	_, err = cli.ImagePush(ctx, fmt.Sprintf("%s/%s/%s", cfg.Registry.URL, "motorcode", image), types.ImagePushOptions{
+	pusher, err := cli.ImagePush(ctx, fmt.Sprintf("%s/%s/%s", cfg.Registry.URL, cfg.Registry.Login, image), types.ImagePushOptions{
 		RegistryAuth: authStr,
 	})
 	if err != nil {
 		return fmt.Errorf("unable to push image: %v", err)
 	}
+	defer pusher.Close()
+	io.Copy(os.Stdout, pusher)
 	return nil
 
 }
