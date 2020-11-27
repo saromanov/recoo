@@ -27,13 +27,15 @@ func generateCompose(cfg config.Deploy) error {
 	c := &Compose{
 		Version:  "3.3",
 		Networks: map[string]Network{"test": Network{}},
-		Services: map[string]Service{
-			"backend": Service{
-				Image:    "redis",
-				Networks: []string{"test"},
-			},
-		},
 	}
+
+	services := map[string]Service{}
+	for _, s := range cfg.Services {
+		services[fmt.Sprintf("%s-service", s.Image)] = Service{
+			Image: s.Image,
+		}
+	}
+	c.Services = services
 
 	out, err := yaml.Marshal(c)
 	if err != nil {

@@ -1,7 +1,9 @@
 package swarm
 
-func Run() error {
-	if err := generateCompose(); err != nil {
+import "github.com/saromanov/recoo/internal/config"
+
+func Run(cfg config.Deploy) error {
+	if err := generateCompose(cfg); err != nil {
 		return err
 	}
 	/*_, err := os.Exec("docker swarm deploy").Output()

@@ -8,6 +8,7 @@ import (
 
 	"github.com/saromanov/recoo/internal/config"
 	"github.com/saromanov/recoo/internal/recoo/deploy/swarm"
+	"github.com/saromanov/recoo/internal/recoo/release"
 )
 
 // Core defines main logic
@@ -34,11 +35,11 @@ func (c *Core) Start(ctx context.Context) error {
 	}
 	/*if err := build.Run(c.cfg.Build, dirName); err != nil {
 		return fmt.Errorf("unable to execute build phase: %v", err)
-	}
+	}*/
 	if err := release.Run(c.cfg.Release, dirName); err != nil {
 		return fmt.Errorf("unable to execute release stage: %v", err)
-	}*/
-	if err := swarm.Run(); err != nil {
+	}
+	if err := swarm.Run(c.cfg.Deploy); err != nil {
 		return fmt.Errorf("unable to run swarm stage: %v", err)
 	}
 	return nil
