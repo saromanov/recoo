@@ -7,8 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/saromanov/recoo/internal/config"
-	"github.com/saromanov/recoo/internal/recoo/build"
-	"github.com/saromanov/recoo/internal/recoo/release"
+	"github.com/saromanov/recoo/internal/recoo/deploy/swarm"
 )
 
 // Core defines main logic
@@ -33,11 +32,14 @@ func (c *Core) Start(ctx context.Context) error {
 	if dirName == "" {
 		return fmt.Errorf("unable to get dir name")
 	}
-	if err := build.Run(c.cfg.Build, dirName); err != nil {
+	/*if err := build.Run(c.cfg.Build, dirName); err != nil {
 		return fmt.Errorf("unable to execute build phase: %v", err)
 	}
 	if err := release.Run(c.cfg.Release, dirName); err != nil {
 		return fmt.Errorf("unable to execute release stage: %v", err)
+	}*/
+	if err := swarm.Run(); err != nil {
+		return fmt.Errorf("unable to run swarm stage: %v", err)
 	}
 	return nil
 }

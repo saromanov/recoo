@@ -21,7 +21,13 @@ type Build struct {
 
 // Deploy defines stage for deploy
 type Deploy struct {
-	Provider string `yaml:"provider"`
+	Provider string    `yaml:"provider"`
+	Services []Service `yaml:"services"`
+}
+
+// Service defines configuration for service
+type Service struct {
+	Image string `yaml:"image"`
 }
 
 // Release defines release stage

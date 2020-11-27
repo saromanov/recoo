@@ -8,6 +8,7 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/go-enry/go-enry/v2 v2.5.2
+	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/saromanov/cowrow v0.0.0-20200409190230-745380e3c39c
