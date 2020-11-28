@@ -23,17 +23,20 @@ type Service struct {
 	Networks []string `yaml:"networks"`
 }
 
-func generateCompose(cfg config.Deploy) error {
+func generateCompose(cfg config.Deploy, imageURL, imageName string) error {
 	c := &Compose{
 		Version:  "3.3",
 		Networks: map[string]Network{"test": Network{}},
 	}
-
 	services := map[string]Service{}
 	for _, s := range cfg.Services {
 		services[fmt.Sprintf("%s-service", s.Image)] = Service{
 			Image: s.Image,
 		}
+	}
+
+	services[fmt.Sprintf("%s-service", imageName)] = Service{
+		Image: imageURL,
 	}
 	c.Services = services
 

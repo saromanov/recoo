@@ -8,7 +8,6 @@ import (
 
 	"github.com/saromanov/recoo/internal/config"
 	"github.com/saromanov/recoo/internal/recoo/deploy/swarm"
-	"github.com/saromanov/recoo/internal/recoo/release"
 )
 
 // Core defines main logic
@@ -33,14 +32,20 @@ func (c *Core) Start(ctx context.Context) error {
 	if dirName == "" {
 		return fmt.Errorf("unable to get dir name")
 	}
+	imageURL := c.getImageURL(dirName)
 	/*if err := build.Run(c.cfg.Build, dirName); err != nil {
 		return fmt.Errorf("unable to execute build phase: %v", err)
 	}*/
-	if err := release.Run(c.cfg.Release, dirName); err != nil {
+	/*if err := release.Run(c.cfg.Release, dirName); err != nil {
 		return fmt.Errorf("unable to execute release stage: %v", err)
-	}
-	if err := swarm.Run(c.cfg.Deploy); err != nil {
+	}*/
+	if err := swarm.Run(c.cfg.Deploy, imageURL, dirName); err != nil {
 		return fmt.Errorf("unable to run swarm stage: %v", err)
 	}
 	return nil
+}
+
+// getImageURL returns image url
+func (c *Core) getImageURL(image string) string {
+	return fmt.Sprintf("%s/%s/%s", c.cfg.Release.Registry.URL, c.cfg.Release.Registry.Login, image)
 }
