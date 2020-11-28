@@ -14,7 +14,7 @@ func Run(cfg config.Deploy, imageURL, imageName string) error {
 	}
 	_, err := exec.Command("docker", "stack", "deploy", "--compose-file docker-compose.yml", "recoo", " --with-registry-auth").Output()
 	if err != nil {
-		return fmt.Errorf("unable to exec: %v", err)
+		return fmt.Errorf("unable to exec command: %v", err)
 	}
 	return nil
 }
