@@ -31,12 +31,14 @@ func generateCompose(cfg config.Deploy, imageURL, imageName string) error {
 	services := map[string]Service{}
 	for _, s := range cfg.Services {
 		services[fmt.Sprintf("%s-service", s.Image)] = Service{
-			Image: s.Image,
+			Image:    s.Image,
+			Networks: []string{"test"},
 		}
 	}
 
 	services[fmt.Sprintf("%s-service", imageName)] = Service{
-		Image: imageURL,
+		Image:    imageURL,
+		Networks: []string{"test"},
 	}
 	c.Services = services
 
