@@ -16,15 +16,16 @@ import (
 
 // Run starts of execution of release pipeline
 func Run(cfg config.Release, image string) error {
-	if cfg.Registry.Login == "" && cfg.Registry.Password == "" {
-		return fmt.Errorf("login or password is not defined")
-	}
 	if cfg.Registry.URL == "" {
 		return fmt.Errorf("url to the registry is not defined")
 	}
 
 	cfg.Registry.Login = getVariable(cfg.Registry.Login)
 	cfg.Registry.Password = getVariable(cfg.Registry.Password)
+	fmt.Println(cfg.Registry.Login, cfg.Registry.Password)
+	if cfg.Registry.Login == "" && cfg.Registry.Password == "" {
+		return fmt.Errorf("login or password is not defined")
+	}
 	return imagePush(cfg, image)
 }
 
@@ -66,7 +67,7 @@ func imagePush(cfg config.Release, image string) error {
 
 func getVariable(data string) string {
 	if strings.HasPrefix(data, "$") {
-		return os.Getenv(data)
+		return os.Getenv(data[1:])
 	}
 	return data
 }
