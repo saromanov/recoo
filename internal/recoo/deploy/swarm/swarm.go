@@ -7,6 +7,7 @@ import (
 	"github.com/saromanov/recoo/internal/config"
 )
 
+// Run defines execute of swarm stage
 func Run(cfg config.Deploy, imageURL, imageName string) error {
 	if err := generateCompose(cfg, imageURL, imageName); err != nil {
 		return err
