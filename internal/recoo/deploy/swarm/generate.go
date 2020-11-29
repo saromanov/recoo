@@ -24,21 +24,22 @@ type Service struct {
 }
 
 func generateCompose(cfg config.Deploy, imageURL, imageName string) error {
+	networkName := "test-recoo"
 	c := &Compose{
 		Version:  "3.3",
-		Networks: map[string]Network{"test": Network{}},
+		Networks: map[string]Network{networkName: Network{}},
 	}
 	services := map[string]Service{}
 	for _, s := range cfg.Services {
 		services[fmt.Sprintf("%s-service", s.Image)] = Service{
 			Image:    s.Image,
-			Networks: []string{"test"},
+			Networks: []string{networkName},
 		}
 	}
 
 	services[fmt.Sprintf("%s-service", imageName)] = Service{
 		Image:    imageURL,
-		Networks: []string{"test"},
+		Networks: []string{networkName},
 	}
 	c.Services = services
 
