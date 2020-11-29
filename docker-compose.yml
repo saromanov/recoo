@@ -1,0 +1,12 @@
+version: "3.3"
+networks:
+  test-recoo: {}
+services:
+  recoo-service:
+    image: docker.io/motorcode/recoo
+    networks:
+    - test-recoo
+  redis-service:
+    image: redis
+    networks:
+    - test-recoo

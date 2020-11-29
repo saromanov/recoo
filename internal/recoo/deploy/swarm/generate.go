@@ -15,9 +15,11 @@ type Compose struct {
 	Services map[string]Service `yaml:"services"`
 }
 
+// Network provides definition of configuration
 type Network struct {
 }
 
+// Service provides definition of service configurarion
 type Service struct {
 	Image    string   `yaml:"image"`
 	Networks []string `yaml:"networks"`
