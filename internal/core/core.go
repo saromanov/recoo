@@ -35,6 +35,9 @@ func (c *Core) Start(ctx context.Context) error {
 		return fmt.Errorf("unable to get dir name")
 	}
 	imageURL := c.getImageURL(dirName)
+	if err := c.preStage(); err != nil {
+		return fmt.Errorf("unable to execute pre stage: %v", err)
+	}
 	if err := build.Run(c.cfg.Build, dirName); err != nil {
 		return fmt.Errorf("unable to execute build phase: %v", err)
 	}
@@ -54,15 +57,11 @@ func (c *Core) getImageURL(image string) string {
 
 // preStage probides running of prepare
 func (c *Core) preStage() error {
-	if _, err := os.Stat("recoo.Dockerfile"); err != nil {
-		if !os.IsNotExist(err){
-			return os.Remove("recoo.Dockerfile")
-		}
+	if _, err := os.Stat("recoo.Dockerfile"); err == nil {
+		return os.Remove("recoo.Dockerfile")
 	} 
-	if _, err := os.Stat("recoo.tar.gzip"); err != nil {
-		if !os.IsNotExist(err){
-			return os.Remove("recoo.tar.gzip")
-		}
+	if _, err := os.Stat("recoo.tar.gzip"); err == nil {
+		return os.Remove("recoo.tar.gzip")
 	} 
 	return nil
 }
