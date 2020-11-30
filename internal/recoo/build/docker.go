@@ -18,7 +18,7 @@ import (
 
 func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	data := generateDockerfile(cfg)
-	const dockerfile = "Dockerfile"
+	const dockerfile = "recoo.Dockerfile"
 	if err := ioutil.WriteFile(dockerfile, []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
 	}
@@ -65,7 +65,7 @@ func buildImage(tags []string, buildContext string) error {
 
 	buildOptions := types.ImageBuildOptions{
 		Context:    buildContextReader,
-		Dockerfile: "Dockerfile",
+		Dockerfile: "recoo.Dockerfile",
 		Remove:     true,
 		Tags:       tags,
 		NoCache:    true,
