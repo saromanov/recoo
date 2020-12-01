@@ -39,7 +39,7 @@ func (c *Core) Start(ctx context.Context) error {
 		return fmt.Errorf("unable to execute pre stage: %v", err)
 	}
 	if err := build.Run(c.cfg.Build, dirName); err != nil {
-		return fmt.Errorf("unable to execute build phase: %v", err)
+		return fmt.Errorf("unable to execute build stage: %v", err)
 	}
 	if err := release.Run(c.cfg.Release, dirName); err != nil {
 		return fmt.Errorf("unable to execute release stage: %v", err)
