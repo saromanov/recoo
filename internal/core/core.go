@@ -58,10 +58,14 @@ func (c *Core) getImageURL(image string) string {
 // preStage probides running of prepare
 func (c *Core) preStage() error {
 	if _, err := os.Stat("recoo.Dockerfile"); err == nil {
-		return os.Remove("recoo.Dockerfile")
+		if err := os.Remove("recoo.Dockerfile"); err != nil {
+			return fmt.Errorf("unable to remove file: %v", err)
+		}
 	} 
 	if _, err := os.Stat("recoo.tar.gzip"); err == nil {
-		return os.Remove("recoo.tar.gzip")
+		if err := os.Remove("recoo.tar.gzip"); err != nil {
+			return fmt.Errorf("unable to remove file: %v", err)
+		}
 	} 
 	return nil
 }
