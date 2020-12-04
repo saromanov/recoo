@@ -50,7 +50,7 @@ func (c *Core) Start(ctx context.Context) error {
 	return nil
 }
 
-func Remove(ctx context.Context) error {
+func (c *Core) Remove(ctx context.Context) error {
 	currentDir, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("unable to get current dir: %v", err)

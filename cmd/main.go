@@ -21,7 +21,7 @@ func exec() {
 				Action: run,
 			},
 			{
-				Name:   "stop",
+				Name:   "rm",
 				Usage:  "stopping of pipeline",
 				Action: stop,
 			},
@@ -51,6 +51,10 @@ func run(ctx *cli.Context) error {
 }
 
 func stop(ctx *cli.Context) error {
+	cfg, err := config.Load("config.yml")
+	if err != nil {
+		logrus.WithError(err).Fatalf("unable to load config")
+	}
 	c := core.New(cfg)
 	if err := c.Remove(context.Background()); err != nil {
 		logrus.WithError(err).Fatalf("unable to remove pipeline")
