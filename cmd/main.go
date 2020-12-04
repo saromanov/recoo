@@ -20,6 +20,11 @@ func exec() {
 				Usage:  "running of pipeline",
 				Action: run,
 			},
+			{
+				Name:   "stop",
+				Usage:  "stopping of pipeline",
+				Action: stop,
+			},
 		},
 	}
 
@@ -44,6 +49,11 @@ func run(ctx *cli.Context) error {
 	}
 	return nil
 }
+
+func stop(ctx *cli.Context) error {
+	return nil
+}
+
 func main() {
 	exec()
 }

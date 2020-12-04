@@ -49,7 +49,7 @@ func generateCompose(cfg config.Deploy, imageURL, imageName string) error {
 	if err != nil {
 		return fmt.Errorf("unable to marshal to file: %v", err)
 	}
-	if err := ioutil.WriteFile("docker-compose.yml", out, 777); err != nil {
+	if err := ioutil.WriteFile("docker-compose.yml", out, 0644); err != nil {
 		return fmt.Errorf("unable to write to file: %v", err)
 	}
 	return nil
