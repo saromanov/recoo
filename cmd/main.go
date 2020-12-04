@@ -51,6 +51,10 @@ func run(ctx *cli.Context) error {
 }
 
 func stop(ctx *cli.Context) error {
+	c := core.New(cfg)
+	if err := c.Remove(context.Background()); err != nil {
+		logrus.WithError(err).Fatalf("unable to remove pipeline")
+	}
 	return nil
 }
 

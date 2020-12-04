@@ -50,6 +50,21 @@ func (c *Core) Start(ctx context.Context) error {
 	return nil
 }
 
+func Remove(ctx context.Context) error {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("unable to get current dir: %v", err)
+	}
+	dirName := filepath.Base(currentDir)
+	if dirName == "" {
+		return fmt.Errorf("unable to get dir name")
+	}
+	if err := swarm.Remove(dirName); err != nil {
+		return fmt.Errorf("unable to remove deploy stack: %v", err)
+	}
+	return nil
+}
+
 // getImageURL returns image url
 func (c *Core) getImageURL(image string) string {
 	return fmt.Sprintf("%s/%s/%s", c.cfg.Release.Registry.URL, c.cfg.Release.Registry.Login, image)
