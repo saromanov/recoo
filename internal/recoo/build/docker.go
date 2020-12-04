@@ -17,7 +17,7 @@ import (
 // https://medium.com/@Frikkylikeme/controlling-docker-with-golang-code-b213d9699998
 
 func createDockerfile(cfg config.Build, lang Language, dirName string) error {
-	data := generateDockerfile(cfg)
+	data := generateDockerfile(cfg, getImage(cfg, lang))
 	const dockerfile = "recoo.Dockerfile"
 	if err := ioutil.WriteFile(dockerfile, []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
@@ -91,12 +91,22 @@ func buildImage(tags []string, buildContext string) error {
 
 // generateDockerfile provides generating of Dockerfiloe based on language
 // https://semaphoreci.com/community/tutorials/how-to-deploy-a-go-web-application-with-docker
-func generateDockerfile(cfg config.Build) string {
-	data := fmt.Sprintf("FROM %s\n", cfg.Image)
+func generateDockerfile(cfg config.Build, image string) string {
+	data := fmt.Sprintf("FROM %s\n", image)
 	data += fmt.Sprintf("ADD . /app\n")
 	data += "WORKDIR /app\n"
 	data += fmt.Sprintf("RUN go mod download\n")
 	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entryfile)
 	data += "ENTRYPOINT [ /bin/app ]"
 	return data
+}
+
+func getImage(cfg config.Build, lang Language) string {
+	if cfg.Image != "" {
+		return cfg.Image
+	}
+	if lang == GO {
+		return "golang:1.15-alpine"
+	}
+	return ""
 }
