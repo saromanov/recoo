@@ -3,7 +3,7 @@ networks:
   test-recoo: {}
 services:
   recoo-service:
-    image: docker.io/motorcode/recoo
+    image: motorcode/recoo
     networks:
     - test-recoo
   redis-service:

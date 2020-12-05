@@ -68,6 +68,9 @@ func (c *Core) Remove(ctx context.Context) error {
 
 // getImageURL returns image url
 func (c *Core) getImageURL(image string) string {
+	if c.cfg.Release.Registry.URL == "local" {
+		return fmt.Sprintf("%s/%s", c.cfg.Release.Registry.Login, image)
+	}
 	return fmt.Sprintf("%s/%s/%s", c.cfg.Release.Registry.URL, c.cfg.Release.Registry.Login, image)
 }
 

@@ -19,18 +19,19 @@ func Run(cfg config.Release, image string) error {
 	if cfg.Registry.URL == "" {
 		return fmt.Errorf("url to the registry is not defined")
 	}
-
-	cfg.Registry.Login = getVariable(cfg.Registry.Login)
-	cfg.Registry.Password = getVariable(cfg.Registry.Password)
-	fmt.Println(cfg.Registry.Login, cfg.Registry.Password)
-	if cfg.Registry.Login == "" && cfg.Registry.Password == "" {
-		return fmt.Errorf("login or password is not defined")
+	if cfg.Registry.URL == "local" {
+		return nil
 	}
 	return imagePush(cfg, image)
 }
 
 // imagePush provides pushing of images
 func imagePush(cfg config.Release, image string) error {
+	cfg.Registry.Login = getVariable(cfg.Registry.Login)
+	cfg.Registry.Password = getVariable(cfg.Registry.Password)
+	if cfg.Registry.Login == "" && cfg.Registry.Password == "" {
+		return fmt.Errorf("login or password is not defined")
+	}
 	ctx := context.Background()
 
 	cli, err := client.NewEnvClient()
