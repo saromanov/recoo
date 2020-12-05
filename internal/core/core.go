@@ -59,6 +59,7 @@ func (c *Core) Remove(ctx context.Context) error {
 	if dirName == "" {
 		return fmt.Errorf("unable to get dir name")
 	}
+	
 	if err := swarm.Remove(dirName); err != nil {
 		return fmt.Errorf("unable to remove deploy stack: %v", err)
 	}
