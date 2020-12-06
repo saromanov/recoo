@@ -18,6 +18,9 @@ import (
 
 func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	data := generateDockerfile(cfg, getImage(cfg, lang))
+	if err := createModules(); err != nil {
+		return fmt.Errorf("unable to create modules: %v", err)
+	}
 	const dockerfile = "recoo.Dockerfile"
 	if err := ioutil.WriteFile(dockerfile, []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
