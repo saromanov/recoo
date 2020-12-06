@@ -28,7 +28,7 @@ func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	if err := archiveBuildContext(dirName); err != nil {
 		return fmt.Errorf("unable to archive build context: %v", err)
 	}
-	if err := buildImage([]string{dirName}, fmt.Sprintf("%s.tar.gzip", dirName)); err != nil {
+	if err := buildImage([]string{fmt.Sprintf("%s/%s", "motorcode", dirName)}, fmt.Sprintf("%s.tar.gzip", dirName)); err != nil {
 		return fmt.Errorf("unable to build image: %v", err)
 	}
 	if err := os.Remove(dockerfile); err != nil {

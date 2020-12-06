@@ -9,8 +9,7 @@ import (
 // create modules probides creating of modules for go
 func createModules() error {
 	_, errMod := os.Stat("go.mod")
-	_, errSum := os.Stat("go.sum")
-	if errMod == nil && errSum == nil {
+	if errMod == nil {
 		return nil
 	}
 
