@@ -47,7 +47,7 @@ type Registry struct {
 func Load(path string) (*Config, error) {
 	cfg := &Config{}
 	if err := cowrow.LoadByPath(path, &cfg); err != nil {
-		return nil, fmt.Errorf("unable to load config: %v", err)
+		return nil, fmt.Errorf("unable to load config file: %v", err)
 	}
 	return cfg, nil
 }
