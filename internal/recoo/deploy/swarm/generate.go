@@ -26,7 +26,7 @@ type Service struct {
 	Ports    []string `yaml:"ports"`
 }
 
-func generateCompose(cfg config.Deploy, imageURL, imageName string) error {
+func generateCompose(cfg config.Deploy, imageURL, imageName string, ports []string) error {
 	networkName := "test-recoo"
 	c := &Compose{
 		Version:  "3.3",
@@ -37,13 +37,13 @@ func generateCompose(cfg config.Deploy, imageURL, imageName string) error {
 		services[fmt.Sprintf("%s-service", s.Image)] = Service{
 			Image:    s.Image,
 			Networks: []string{networkName},
-			Ports: s.Ports,
 		}
 	}
 
 	services[fmt.Sprintf("%s-service", imageName)] = Service{
 		Image:    imageURL,
 		Networks: []string{networkName},
+		Ports: ports,
 	}
 	c.Services = services
 

@@ -17,6 +17,7 @@ type Config struct {
 type Build struct {
 	Image     string `yaml:"image"`
 	Entryfile string `yaml:"entryfile"`
+	Ports []string `yaml:"ports"`
 }
 
 // Deploy defines stage for deploy
@@ -28,7 +29,6 @@ type Deploy struct {
 // Service defines configuration for service
 type Service struct {
 	Image string `yaml:"image"`
-	Ports []string `yaml:"ports"`
 }
 
 // Release defines release stage

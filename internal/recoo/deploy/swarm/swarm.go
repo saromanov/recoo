@@ -8,8 +8,8 @@ import (
 )
 
 // Run defines execute of swarm stage
-func Run(cfg config.Deploy, imageURL, imageName string) error {
-	if err := generateCompose(cfg, imageURL, imageName); err != nil {
+func Run(cfg config.Deploy, imageURL, imageName string, ports[]string) error {
+	if err := generateCompose(cfg, imageURL, imageName, ports); err != nil {
 		return err
 	}
 	cmdStr := fmt.Sprintf("docker stack deploy --compose-file docker-compose.yml recoo_%s --with-registry-auth", imageName)

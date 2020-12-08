@@ -44,7 +44,7 @@ func (c *Core) Start(ctx context.Context) error {
 	if err := release.Run(c.cfg.Release, dirName); err != nil {
 		return fmt.Errorf("unable to execute release stage: %v", err)
 	}
-	if err := swarm.Run(c.cfg.Deploy, imageURL, dirName); err != nil {
+	if err := swarm.Run(c.cfg.Deploy, imageURL, dirName, c.cfg.Build.Ports); err != nil {
 		return fmt.Errorf("unable to run swarm stage: %v", err)
 	}
 	return nil
