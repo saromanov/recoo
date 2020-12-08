@@ -23,6 +23,7 @@ type Network struct {
 type Service struct {
 	Image    string   `yaml:"image"`
 	Networks []string `yaml:"networks"`
+	Ports    []string `yaml:"ports"`
 }
 
 func generateCompose(cfg config.Deploy, imageURL, imageName string) error {
@@ -36,6 +37,7 @@ func generateCompose(cfg config.Deploy, imageURL, imageName string) error {
 		services[fmt.Sprintf("%s-service", s.Image)] = Service{
 			Image:    s.Image,
 			Networks: []string{networkName},
+			Ports: s.Ports,
 		}
 	}
 
