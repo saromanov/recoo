@@ -98,9 +98,12 @@ func generateDockerfile(cfg config.Build, image string) string {
 	data := fmt.Sprintf("FROM %s\n", image)
 	data += fmt.Sprintf("ADD . /app\n")
 	data += "WORKDIR /app\n"
+	data += "ENV CGO_ENABLED=0\n"
+	data += "ENV GOOS=linux\n" 
+	data += "ENV GARCH=amd64\n"
 	data += fmt.Sprintf("RUN go mod download\n")
 	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entryfile)
-	data += "ENTRYPOINT [ /bin/app ]"
+	data += "CMD [ /bin/app ]"
 	return data
 }
 
