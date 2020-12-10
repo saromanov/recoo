@@ -21,14 +21,14 @@ func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	if err := createModules(); err != nil {
 		return fmt.Errorf("unable to create modules: %v", err)
 	}
-	const dockerfile = "recoo.Dockerfile"
+	dockerfile = fmt.Sprintf("%s.recoo.Dockerfile", dirName)
 	if err := ioutil.WriteFile(dockerfile, []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
 	}
 	if err := archiveBuildContext(dirName); err != nil {
 		return fmt.Errorf("unable to archive build context: %v", err)
 	}
-	if err := buildImage([]string{fmt.Sprintf("%s/%s", "motorcode", dirName)}, fmt.Sprintf("%s.tar.gzip", dirName)); err != nil {
+	if err := buildImage([]string{fmt.Sprintf("%s/%s", "motorcode", dirName)}, dockerfile, fmt.Sprintf("%s.tar.gzip", dirName)); err != nil {
 		return fmt.Errorf("unable to build image: %v", err)
 	}
 	if err := os.Remove(dockerfile); err != nil {
@@ -49,7 +49,7 @@ func archiveBuildContext(archiveName string) error {
 	return nil
 }
 
-func buildImage(tags []string, buildContext string) error {
+func buildImage(tags []string, imageName, buildContext string) error {
 	client, err := client.NewEnvClient()
 	if err != nil {
 		return fmt.Errorf("unable to init Docker client")
@@ -68,7 +68,7 @@ func buildImage(tags []string, buildContext string) error {
 
 	buildOptions := types.ImageBuildOptions{
 		Context:    buildContextReader,
-		Dockerfile: "recoo.Dockerfile",
+		Dockerfile: imageName,
 		Remove:     true,
 		Tags:       tags,
 		NoCache:    true,
