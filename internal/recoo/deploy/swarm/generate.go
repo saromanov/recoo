@@ -1,6 +1,7 @@
 package swarm
 
 import (
+	"math/rand"
 	"fmt"
 	"io/ioutil"
 
@@ -27,7 +28,7 @@ type Service struct {
 }
 
 func generateCompose(cfg config.Deploy, imageURL, imageName string, ports []string) error {
-	networkName := "test-recoo"
+	networkName := fmt.Sprintf("test-recoo-%d", rand.Int())
 	c := &Compose{
 		Version:  "3.3",
 		Networks: map[string]Network{networkName: Network{}},
