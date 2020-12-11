@@ -21,7 +21,7 @@ func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	if err := createModules(); err != nil {
 		return fmt.Errorf("unable to create modules: %v", err)
 	}
-	dockerfile = fmt.Sprintf("%s.recoo.Dockerfile", dirName)
+	dockerfile := fmt.Sprintf("%s.recoo.Dockerfile", dirName)
 	if err := ioutil.WriteFile(dockerfile, []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
 	}
@@ -103,7 +103,7 @@ func generateDockerfile(cfg config.Build, image string) string {
 	data += "ENV GARCH=amd64\n"
 	data += fmt.Sprintf("RUN go mod download\n")
 	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entryfile)
-	data += "CMD [ /bin/app ]"
+	data += `CMD [ "/bin/app" ]`
 	return data
 }
 
