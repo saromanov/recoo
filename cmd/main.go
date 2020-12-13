@@ -22,7 +22,7 @@ func exec() {
 			},
 			{
 				Name:   "rm",
-				Usage:  "stopping of pipeline",
+				Usage:  "stopping of pipeline and removing of services",
 				Action: stop,
 			},
 		},
@@ -35,7 +35,7 @@ func exec() {
 }
 
 func run(ctx *cli.Context) error {
-	cfg, err := config.Load("config.yml")
+	cfg, err := config.Load("recoo-config.yml")
 	if err != nil {
 		logrus.WithError(err).Fatalf("unable to load config")
 	}
@@ -51,7 +51,7 @@ func run(ctx *cli.Context) error {
 }
 
 func stop(ctx *cli.Context) error {
-	cfg, err := config.Load("config.yml")
+	cfg, err := config.Load("recoo-config.yml")
 	if err != nil {
 		logrus.WithError(err).Fatalf("unable to load config")
 	}
