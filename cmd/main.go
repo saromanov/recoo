@@ -2,18 +2,25 @@ package main
 
 import (
 	"context"
+	"os"
+
 	"github.com/saromanov/recoo/internal/config"
 	"github.com/saromanov/recoo/internal/core"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
-	"os"
 )
 
 func exec() {
 	app := &cli.App{
 		Name:  "recoo",
 		Usage: "Starting of the app",
-		Flags: []cli.Flag{},
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "config",
+				Aliases: []string{"c"},
+				Usage:   "path to config",
+			},
+		},
 		Commands: []*cli.Command{
 			{
 				Name:   "run",
@@ -35,7 +42,12 @@ func exec() {
 }
 
 func run(ctx *cli.Context) error {
-	cfg, err := config.Load("recoo-config.yml")
+	cfgPath := "recoo-config.yml"
+	cfgFlags := ctx.String("config")
+	if cfgFlags != "" {
+		cfgPath = cfgFlags
+	}
+	cfg, err := config.Load(cfgPath)
 	if err != nil {
 		logrus.WithError(err).Fatalf("unable to load config")
 	}
