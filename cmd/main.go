@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/saromanov/recoo/internal/config"
@@ -42,12 +43,7 @@ func exec() {
 }
 
 func run(ctx *cli.Context) error {
-	cfgPath := "recoo-config.yml"
-	cfgFlags := ctx.String("config")
-	if cfgFlags != "" {
-		cfgPath = cfgFlags
-	}
-	cfg, err := config.Load(cfgPath)
+	cfg, err := getConfig(ctx)
 	if err != nil {
 		logrus.WithError(err).Fatalf("unable to load config")
 	}
@@ -63,7 +59,7 @@ func run(ctx *cli.Context) error {
 }
 
 func stop(ctx *cli.Context) error {
-	cfg, err := config.Load("recoo-config.yml")
+	cfg, err := getConfig(ctx)
 	if err != nil {
 		logrus.WithError(err).Fatalf("unable to load config")
 	}
@@ -72,6 +68,19 @@ func stop(ctx *cli.Context) error {
 		logrus.WithError(err).Fatalf("unable to remove pipeline")
 	}
 	return nil
+}
+
+func getConfig(ctx *cli.Context) (*config.Config, error) {
+	cfgPath := "recoo-config.yml"
+	cfgFlags := ctx.String("config")
+	if cfgFlags != "" {
+		cfgPath = cfgFlags
+	}
+	cfg, err := config.Load(cfgPath)
+	if err != nil {
+		return nil, fmt.Errorf("unable to load config: %v", err)
+	}
+	return cfg, nil
 }
 
 func main() {
