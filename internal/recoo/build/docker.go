@@ -31,8 +31,9 @@ func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	if err := archiveBuildContext(dirName); err != nil {
 		return failCreateDockerfile(fmt.Errorf("unable to archive build context: %v", err), dockerfile)
 	}
-	if err := buildImage([]string{fmt.Sprintf("%s/%s", "motorcode", dirName)}, dockerfile, fmt.Sprintf("%s.tar.gzip", dirName)); err != nil {
-		return failCreateDockerfile(fmt.Errorf("unable to build image: %v", err), dockerfile)
+	archfile := fmt.Sprintf("%s.tar.gzip", dirName)
+	if err := buildImage([]string{fmt.Sprintf("%s/%s", "motorcode", dirName)}, dockerfile, archfile); err != nil {
+		return failCreateDockerfile(fmt.Errorf("unable to build image: %v", err), archfile, dockerfile)
 	}
 	if err := os.Remove(dockerfile); err != nil {
 		return fmt.Errorf("unable to remove Dockerfile: %v", err)
@@ -117,11 +118,16 @@ func getImage(cfg config.Build, lang Language) string {
 	if lang == GO {
 		return "golang:1.15-alpine"
 	}
+	if lang == Python {
+		return "python3.9-slim"
+	}
 	return ""
 }
 
-// removing current artifacts
-func failCreateDockerfile(err error, dockerfile string) error{
-	os.Remove(dockerfile) // skip checking of the error
+// removing current artifacts on files
+func failCreateDockerfile(err error, files ...string) error{
+	for _, f := range files {
+		os.Remove(f) // skip checking of the error
+	}
 	return err
 }

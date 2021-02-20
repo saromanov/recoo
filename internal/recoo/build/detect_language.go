@@ -13,6 +13,7 @@ type Language int
 
 const (
 	GO Language = iota
+	Python Language = 1
 	Unknown
 )
 
@@ -29,6 +30,8 @@ func detectLanguage(path string) (Language, error) {
 	switch langs[0] {
 	case "Go":
 		return GO, nil
+	case "Python":
+		return Python, nil
 	}
 	return Unknown, fmt.Errorf("unknown language")
 }
