@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -102,8 +103,11 @@ func generateDockerfile(cfg config.Build, image string) string {
 	data := fmt.Sprintf("FROM %s\n", image)
 	data += fmt.Sprintf("ADD . /app\n")
 	data += "WORKDIR /app\n"
+	if len(cfg.Install) > 0 {
+		data += fmt.Sprintf("RUN apk add --upgrade && apk add %s\n", strings.Join(cfg.Install, " "))
+	}
 	data += "ENV CGO_ENABLED=0\n"
-	data += "ENV GOOS=linux\n" 
+	data += "ENV GOOS=linux\n"
 	data += "ENV GARCH=amd64\n"
 	data += fmt.Sprintf("RUN go mod download\n")
 	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entryfile)
@@ -125,7 +129,7 @@ func getImage(cfg config.Build, lang Language) string {
 }
 
 // removing current artifacts on files
-func failCreateDockerfile(err error, files ...string) error{
+func failCreateDockerfile(err error, files ...string) error {
 	for _, f := range files {
 		os.Remove(f) // skip checking of the error
 	}

@@ -8,7 +8,7 @@ import (
 )
 
 // Run defines execute of swarm stage
-func Run(cfg config.Deploy, imageURL, imageName string, ports[]string) error {
+func Run(cfg config.Deploy, imageURL, imageName string, ports []string) error {
 	if err := generateCompose(cfg, imageURL, imageName, ports); err != nil {
 		return err
 	}

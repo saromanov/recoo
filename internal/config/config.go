@@ -15,9 +15,10 @@ type Config struct {
 
 // Build defined build stage
 type Build struct {
-	Image     string `yaml:"image"`
-	Entryfile string `yaml:"entryfile"`
-	Ports []string `yaml:"ports"`
+	Image     string   `yaml:"image"`
+	Entryfile string   `yaml:"entryfile"`
+	Ports     []string `yaml:"ports"`
+	Install   []string `yaml:"install"`
 }
 
 // Deploy defines stage for deploy

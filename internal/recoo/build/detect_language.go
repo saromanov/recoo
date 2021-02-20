@@ -12,7 +12,7 @@ import (
 type Language int
 
 const (
-	GO Language = iota
+	GO     Language = iota
 	Python Language = 1
 	Unknown
 )

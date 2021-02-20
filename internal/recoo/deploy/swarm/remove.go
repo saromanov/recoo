@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 )
+
 // Remove provides removing of service
 func Remove(stackName string) error {
 	cmdStr := fmt.Sprintf("docker stack rm recoo_%s", stackName)

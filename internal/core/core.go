@@ -2,15 +2,15 @@ package core
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
-	"errors"
 	"path/filepath"
 
 	"github.com/saromanov/recoo/internal/config"
 	"github.com/saromanov/recoo/internal/recoo/build"
-	"github.com/saromanov/recoo/internal/recoo/release"
 	"github.com/saromanov/recoo/internal/recoo/deploy/swarm"
+	"github.com/saromanov/recoo/internal/recoo/release"
 )
 
 var errNoDirName = errors.New("unable to get dir name")
@@ -62,7 +62,7 @@ func (c *Core) Remove(ctx context.Context) error {
 	if dirName == "" {
 		return fmt.Errorf("unable to get dir name")
 	}
-	
+
 	if err := swarm.Remove(dirName); err != nil {
 		return fmt.Errorf("unable to remove deploy stack: %v", err)
 	}
@@ -83,11 +83,11 @@ func (c *Core) preStage() error {
 		if err := os.Remove("recoo.Dockerfile"); err != nil {
 			return fmt.Errorf("unable to remove file: %v", err)
 		}
-	} 
+	}
 	if _, err := os.Stat("recoo.tar.gzip"); err == nil {
 		if err := os.Remove("recoo.tar.gzip"); err != nil {
 			return fmt.Errorf("unable to remove file: %v", err)
 		}
-	} 
+	}
 	return nil
 }

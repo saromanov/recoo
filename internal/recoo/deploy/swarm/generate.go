@@ -1,9 +1,9 @@
 package swarm
 
 import (
-	"math/rand"
 	"fmt"
 	"io/ioutil"
+	"math/rand"
 
 	"github.com/go-yaml/yaml"
 	"github.com/saromanov/recoo/internal/config"
@@ -44,7 +44,7 @@ func generateCompose(cfg config.Deploy, imageURL, imageName string, ports []stri
 	services[fmt.Sprintf("%s-service", imageName)] = Service{
 		Image:    imageURL,
 		Networks: []string{networkName},
-		Ports: ports,
+		Ports:    ports,
 	}
 	c.Services = services
 
