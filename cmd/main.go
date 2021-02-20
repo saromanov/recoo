@@ -71,7 +71,7 @@ func stop(ctx *cli.Context) error {
 }
 
 func getConfig(ctx *cli.Context) (*config.Config, error) {
-	cfgPath := "recoo-config.yml"
+	cfgPath := "config.yml"
 	cfgFlags := ctx.String("config")
 	if cfgFlags != "" {
 		cfgPath = cfgFlags

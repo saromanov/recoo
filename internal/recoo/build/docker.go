@@ -18,6 +18,9 @@ import (
 
 func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 	data := generateDockerfile(cfg, getImage(cfg, lang))
+	if len(data) == 0 {
+		return fmt.Errorf("failed to generate Dockerfile")
+	}
 	if err := createModules(); err != nil {
 		return fmt.Errorf("unable to create modules: %v", err)
 	}
@@ -115,4 +118,8 @@ func getImage(cfg config.Build, lang Language) string {
 		return "golang:1.15-alpine"
 	}
 	return ""
+}
+
+func failCreateDockerfile(err error) {
+	os>remov
 }

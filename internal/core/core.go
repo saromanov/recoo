@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"errors"
 	"path/filepath"
 
 	"github.com/saromanov/recoo/internal/config"
@@ -11,6 +12,8 @@ import (
 	"github.com/saromanov/recoo/internal/recoo/release"
 	"github.com/saromanov/recoo/internal/recoo/deploy/swarm"
 )
+
+var errNoDirName = errors.New("unable to get dir name")
 
 // Core defines main logic
 type Core struct {
@@ -32,7 +35,7 @@ func (c *Core) Start(ctx context.Context) error {
 	}
 	dirName := filepath.Base(currentDir)
 	if dirName == "" {
-		return fmt.Errorf("unable to get dir name")
+		return errNoDirName
 	}
 	imageURL := c.getImageURL(dirName)
 	if err := c.preStage(); err != nil {
