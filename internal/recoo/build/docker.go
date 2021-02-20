@@ -100,7 +100,7 @@ func buildImage(tags []string, imageName, buildContext string) error {
 // generateDockerfile provides generating of Dockerfiloe based on language
 // https://semaphoreci.com/community/tutorials/how-to-deploy-a-go-web-application-with-docker
 func generateDockerfile(cfg config.Build, image string) string {
-	data := fmt.Sprintf("FROM %s\n", image)
+	data := fmt.Sprintf("FROM %s as builder\n", image)
 	data += fmt.Sprintf("ADD . /app\n")
 	data += "WORKDIR /app\n"
 	if len(cfg.Install) > 0 {
@@ -111,7 +111,10 @@ func generateDockerfile(cfg config.Build, image string) string {
 	data += "ENV GARCH=amd64\n"
 	data += fmt.Sprintf("RUN go mod download\n")
 	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entryfile)
-	data += `CMD [ "/bin/app" ]`
+	
+	data += `FROM scratch
+		COPY --from=builder /bin/app .
+		CMD ["./app"]`
 	return data
 }
 
