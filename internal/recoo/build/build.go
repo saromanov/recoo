@@ -7,7 +7,7 @@ import (
 )
 
 // Run starts build phase
-func Run(cfg config.Build, namespace, imageName string) error {
+func Run(cfg config.Build, artifactsPath, namespace, imageName string) error {
 	if cfg.Entryfile == "" {
 		return fmt.Errorf("entryfile is not defined")
 	}
@@ -15,7 +15,7 @@ func Run(cfg config.Build, namespace, imageName string) error {
 	if err != nil {
 		return fmt.Errorf("unable to detect language: %v", err)
 	}
-	if err := createDockerfile(cfg, lang, namespace, imageName); err != nil {
+	if err := createDockerfile(cfg, lang, artifactsPath, namespace, imageName); err != nil {
 		return fmt.Errorf("unable to create dockerfile: %v", err)
 	}
 	return nil

@@ -8,9 +8,10 @@ import (
 
 // Config defines configuration
 type Config struct {
-	Build   Build   `yaml:"build"`
-	Deploy  Deploy  `yaml:"deploy"`
-	Release Release `yaml:"release"`
+	ArtifactsDir string  `yaml:"artifacts_dir"`
+	Build        Build   `yaml:"build"`
+	Deploy       Deploy  `yaml:"deploy"`
+	Release      Release `yaml:"release"`
 }
 
 // Build defined build stage

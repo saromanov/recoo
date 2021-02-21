@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/docker/docker/api/types"
@@ -17,7 +18,7 @@ import (
 
 // https://medium.com/@Frikkylikeme/controlling-docker-with-golang-code-b213d9699998
 
-func createDockerfile(cfg config.Build, lang Language, namespace, dirName string) error {
+func createDockerfile(cfg config.Build, lang Language, artifactsPath, namespace, dirName string) error {
 	data := generateDockerfile(cfg, getImage(cfg, lang))
 	if len(data) == 0 {
 		return fmt.Errorf("failed to generate Dockerfile")
@@ -25,14 +26,14 @@ func createDockerfile(cfg config.Build, lang Language, namespace, dirName string
 	if err := createModules(); err != nil {
 		return fmt.Errorf("unable to create modules: %v", err)
 	}
-	dockerfile := fmt.Sprintf("%s.recoo.Dockerfile", dirName)
+	dockerfile := filepath.Join(artifactsPath, fmt.Sprintf("%s.recoo.Dockerfile", dirName))
 	if err := ioutil.WriteFile(dockerfile, []byte(data), 0644); err != nil {
 		return fmt.Errorf("unable to write file: %v", err)
 	}
 	if err := archiveBuildContext(dirName); err != nil {
 		return failCreateDockerfile(fmt.Errorf("unable to archive build context: %v", err), dockerfile)
 	}
-	archfile := fmt.Sprintf("%s.tar.gzip", dirName)
+	archfile := filepath.Join(artifactsPath, fmt.Sprintf("%s.tar.gzip", dirName))
 	if err := buildImage([]string{fmt.Sprintf("%s/%s", namespace, dirName)}, dockerfile, archfile); err != nil {
 		return failCreateDockerfile(fmt.Errorf("unable to build image: %v", err), archfile, dockerfile)
 	}
@@ -111,7 +112,7 @@ func generateDockerfile(cfg config.Build, image string) string {
 	data += "ENV GARCH=amd64\n"
 	data += fmt.Sprintf("RUN go mod download\n")
 	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entryfile)
-	
+
 	data += `FROM scratch
 		COPY --from=builder /bin/app .
 		CMD ["./app"]`
