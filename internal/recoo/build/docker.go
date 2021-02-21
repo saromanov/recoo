@@ -17,7 +17,7 @@ import (
 
 // https://medium.com/@Frikkylikeme/controlling-docker-with-golang-code-b213d9699998
 
-func createDockerfile(cfg config.Build, lang Language, dirName string) error {
+func createDockerfile(cfg config.Build, lang Language, namespace, dirName string) error {
 	data := generateDockerfile(cfg, getImage(cfg, lang))
 	if len(data) == 0 {
 		return fmt.Errorf("failed to generate Dockerfile")
@@ -33,7 +33,7 @@ func createDockerfile(cfg config.Build, lang Language, dirName string) error {
 		return failCreateDockerfile(fmt.Errorf("unable to archive build context: %v", err), dockerfile)
 	}
 	archfile := fmt.Sprintf("%s.tar.gzip", dirName)
-	if err := buildImage([]string{fmt.Sprintf("%s/%s", "motorcode", dirName)}, dockerfile, archfile); err != nil {
+	if err := buildImage([]string{fmt.Sprintf("%s/%s", namespace, dirName)}, dockerfile, archfile); err != nil {
 		return failCreateDockerfile(fmt.Errorf("unable to build image: %v", err), archfile, dockerfile)
 	}
 	if err := os.Remove(dockerfile); err != nil {
