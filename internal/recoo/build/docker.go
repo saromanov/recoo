@@ -18,7 +18,7 @@ import (
 
 // https://medium.com/@Frikkylikeme/controlling-docker-with-golang-code-b213d9699998
 
-func createDockerfile(cfg config.Build, lang Language, artifactsPath, namespace, dirName string) error {
+func buildDockerfile(cfg config.Build, lang Language, artifactsPath, namespace, dirName string) error {
 	data := generateDockerfile(cfg, getImage(cfg, lang))
 	if len(data) == 0 {
 		return fmt.Errorf("failed to generate Dockerfile")
