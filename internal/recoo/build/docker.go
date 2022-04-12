@@ -34,7 +34,11 @@ func buildDockerfile(cfg config.Build, lang Language, artifactsPath, namespace, 
 		return failCreateDockerfile(fmt.Errorf("unable to archive build context: %v", err), dockerfile)
 	}
 	archfile := filepath.Join(artifactsPath, fmt.Sprintf("%s.tar.gzip", dirName))
-	if err := buildImage([]string{fmt.Sprintf("%s/%s", namespace, dirName)}, dockerfile, archfile); err != nil {
+	imageName := fmt.Sprintf("%s/%s", namespace, dirName)
+	if cfg.Tag != "" {
+		imageName = fmt.Sprintf("%s/%s:%s", namespace, dirName, cfg.Tag)
+	}
+	if err := buildImage([]string{imageName}, dockerfile, archfile); err != nil {
 		return failCreateDockerfile(fmt.Errorf("unable to build image: %v", err), archfile, dockerfile)
 	}
 	if err := os.Remove(dockerfile); err != nil {
@@ -111,7 +115,7 @@ func generateDockerfile(cfg config.Build, image string) string {
 	data += "ENV GOOS=linux\n"
 	data += "ENV GARCH=amd64\n"
 	data += fmt.Sprintf("RUN go mod download\n")
-	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entryfile)
+	data += fmt.Sprintf("RUN go build -o /bin/app %s\n", cfg.Entry)
 
 	data += `FROM scratch
 		COPY --from=builder /bin/app .

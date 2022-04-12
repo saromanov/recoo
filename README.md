@@ -6,9 +6,10 @@ Too for quick and easy deployment
 
 Config file `recoo-config.yml`
 
-```
+```sh
+
 build:
-    entryfile: server.go
+    entry: server.go
     ports: 
         - "8086:8086"
 release:

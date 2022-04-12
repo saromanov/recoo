@@ -37,6 +37,9 @@ func (c *Core) Start(ctx context.Context) error {
 	if dirName == "" {
 		return errNoDirName
 	}
+	if c.cfg.Build.Title != "" {
+		dirName = c.cfg.Build.Title
+	}
 	imageURL := c.getImageURL(dirName)
 	if err := c.preStage(); err != nil {
 		return fmt.Errorf("unable to execute pre stage: %v", err)

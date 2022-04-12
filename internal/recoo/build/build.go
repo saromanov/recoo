@@ -13,10 +13,10 @@ var (
 
 // Run starts build phase
 func Run(cfg config.Build, artifactsPath, namespace, imageName string) error {
-	if cfg.Entryfile == "" {
+	if cfg.Entry == "" {
 		return errNoEntryfile
 	}
-	lang, err := detectLanguage(cfg.Entryfile)
+	lang, err := detectLanguage(cfg.Entry)
 	if err != nil {
 		return fmt.Errorf("unable to detect language: %v", err)
 	}
