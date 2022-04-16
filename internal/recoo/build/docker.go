@@ -96,7 +96,7 @@ func buildImage(tags []string, imageName, buildContext string) error {
 	defer imageBuildResponse.Body.Close()
 	_, err = io.Copy(os.Stdout, imageBuildResponse.Body)
 	if err != nil {
-		return fmt.Errorf("unable to apply copy: %v", err)
+		return fmt.Errorf("unable to apply copy to build response: %v", err)
 	}
 
 	return nil
@@ -128,10 +128,10 @@ func getImage(cfg config.Build, lang Language) string {
 		return cfg.Image
 	}
 	if lang == GO {
-		return "golang:1.15-alpine"
+		return "golang:1.18-alpine"
 	}
 	if lang == Python {
-		return "python3.9-slim"
+		return "python3.10-slim"
 	}
 	return ""
 }
