@@ -37,14 +37,14 @@ type Service struct {
 
 // Release defines release stage
 type Release struct {
-	Registry Registry `json:"registry"`
+	Registry Registry `yaml:"registry"`
 }
 
 // Registry defines configuration for registry
 type Registry struct {
-	Login    string `json:"login"`
-	Password string `json:"password"`
-	URL      string `json:"url"`
+	Login    string `yaml:"login"`
+	Password string `yaml:"password"`
+	URL      string `yaml:"url"`
 }
 
 // Load provides loading of config

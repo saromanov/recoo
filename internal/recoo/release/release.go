@@ -19,7 +19,7 @@ func Run(cfg config.Release, image string) error {
 	if cfg.Registry.URL == "" {
 		return fmt.Errorf("url to the registry is not defined")
 	}
-	if cfg.Registry.URL == "local" {
+	if cfg.Registry.URL == "local" || cfg.Registry.URL == ""{
 		return nil
 	}
 	return imagePush(cfg, image)
