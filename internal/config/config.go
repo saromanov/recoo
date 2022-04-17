@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"strings"
+	"os"
 
 	"github.com/saromanov/cowrow"
 )
@@ -55,3 +57,18 @@ func Load(path string) (*Config, error) {
 	}
 	return cfg, nil
 }
+
+// SetEnvVariables provides filling of config
+// from environment variables
+func SetEnvVariables(c *Config) {
+	c.Build.Image = getVariable(c.Build.Image)
+	c.Build.Tag = getVariable(c.Build.Tag)
+}
+
+func getVariable(data string) string {
+	if strings.HasPrefix(data, "$") {
+		return os.Getenv(data[1:])
+	}
+	return data
+}
+
