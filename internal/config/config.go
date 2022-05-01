@@ -8,6 +8,13 @@ import (
 	"github.com/saromanov/cowrow"
 )
 
+type Provider int
+
+const (
+	Swarm Provider = iota
+	K3S
+)
+
 // Config defines configuration
 type Config struct {
 	ArtifactsDir string  `yaml:"artifacts_dir"`
@@ -28,7 +35,7 @@ type Build struct {
 
 // Deploy defines stage for deploy
 type Deploy struct {
-	Provider string    `yaml:"provider"`
+	Provider Provider    `yaml:"provider"`
 	Services []Service `yaml:"services"`
 }
 

@@ -44,14 +44,17 @@ func (c *Core) Start(ctx context.Context) error {
 	if err := c.preStage(); err != nil {
 		return fmt.Errorf("unable to execute pre stage: %v", err)
 	}
+	fmt.Println("Executing of the build stage")
 	if err := build.Run(c.cfg.Build, c.cfg.ArtifactsDir, c.cfg.Release.Registry.Login, dirName); err != nil {
 		return fmt.Errorf("unable to execute build stage: %v", err)
 	}
+	fmt.Println("Executing of the release stage")
 	if err := release.Run(c.cfg.Release, dirName); err != nil {
 		return fmt.Errorf("unable to execute release stage: %v", err)
 	}
+	fmt.Println("Executing of the deploy stage")
 	if err := swarm.Run(c.cfg.Deploy, imageURL, dirName, c.cfg.Build.Ports); err != nil {
-		return fmt.Errorf("unable to run swarm stage: %v", err)
+		return fmt.Errorf("unable to run deploy stage: %v", err)
 	}
 	return nil
 }
