@@ -3,15 +3,12 @@ package swarm
 import (
 	"fmt"
 	"os/exec"
-
+	
 	"github.com/saromanov/recoo/internal/config"
 )
 
 // Run defines execute of swarm stage
 func Run(cfg config.Deploy, imageURL, imageName string, ports []string) error {
-	if cfg.Provider == "" {
-		return nil
-	}
 	if err := generateCompose(cfg, imageURL, imageName, ports); err != nil {
 		return err
 	}
