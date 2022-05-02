@@ -39,7 +39,7 @@ func detectLanguage(path string) (Language, error) {
 func readFile(path string) ([]byte, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to open file")
+		return nil, fmt.Errorf("unable to open file: %v", err)
 	}
 	d, err := ioutil.ReadAll(f)
 	if err != nil {

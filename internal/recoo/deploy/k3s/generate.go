@@ -11,8 +11,9 @@ import (
 // Kuber defines struct for generation k3s
 // (kubernetes) file
 type Kuber struct {
-	APIVersion string `yaml:"apiVersion"`
-	Kind       string `yaml:"kind"`
+	APIVersion string            `yaml:"apiVersion"`
+	Kind       string            `yaml:"kind"`
+	Metadata   map[string]string `yaml:"metadata"`
 }
 
 func generateK3S(cfg config.Deploy, imageURL, imageName string, ports []string) error {
