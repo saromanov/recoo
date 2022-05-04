@@ -14,10 +14,34 @@ type Kuber struct {
 	APIVersion string            `yaml:"apiVersion"`
 	Kind       string            `yaml:"kind"`
 	Metadata   map[string]string `yaml:"metadata"`
+	Spec       Spec              `yaml:"spec"`
+}
+
+type Spec struct {
+	Replicas uint
+	Selector Selector `yaml:"selector"`
+}
+
+type Selector struct {
+	MatchLabels MatchLabels `yaml:"matchLabels"`
+}
+
+type MatchLabels struct {
+	App string `yaml:"app"`
 }
 
 func generateK3S(cfg config.Deploy, imageURL, imageName string, ports []string) error {
-	k := &Kuber{}
+	k := &Kuber{
+		APIVersion: "extensions/v1beta1",
+		Kind:       "Deployment",
+		Metadata: map[string]string{
+			"name":      "recoo",
+			"namespace": "default",
+		},
+		Spec: Spec {
+			Replicas: 1,
+		},
+	}
 	out, err := yaml.Marshal(k)
 	if err != nil {
 		return fmt.Errorf("unable to marshal to file: %v", err)
