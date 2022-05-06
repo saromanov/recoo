@@ -8,6 +8,13 @@ import (
 	"github.com/saromanov/recoo/internal/config"
 )
 
+type K3S struct {
+
+}
+
+func New()*K3S {
+	return &K3S{}
+}
 // Kuber defines struct for generation k3s
 // (kubernetes) file
 type Kuber struct {
@@ -28,6 +35,10 @@ type Selector struct {
 
 type MatchLabels struct {
 	App string `yaml:"app"`
+}
+
+func (k *K3S) Run() error {
+	return nil
 }
 
 func generateK3S(cfg config.Deploy, imageURL, imageName string, ports []string) error {
