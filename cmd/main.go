@@ -7,6 +7,7 @@ import (
 
 	"github.com/saromanov/recoo/internal/config"
 	"github.com/saromanov/recoo/internal/core"
+	"github.com/saromanov/recoo/internal/recoo/deploy"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
@@ -51,7 +52,12 @@ func run(ctx *cli.Context) error {
 		logrus.Fatalf("unable to load config")
 	}
 
-	c := core.New(cfg)
+	depFactory := deploy.DeployFactory{}
+	dep, err := depFactory.Run(cfg.Deploy)
+	if err != nil {
+		logrus.WithError(err).Fatalf("unable to create deploy")
+	}
+	c := core.New(cfg, dep)
 	if err := c.Start(context.Background()); err != nil {
 		logrus.WithError(err).Fatalf("unable to execute pipeline")
 	}
@@ -63,7 +69,12 @@ func stop(ctx *cli.Context) error {
 	if err != nil {
 		logrus.WithError(err).Fatalf("unable to load config")
 	}
-	c := core.New(cfg)
+	depFactory := deploy.DeployFactory{}
+	dep, err := depFactory.Run(cfg.Deploy)
+	if err != nil {
+		logrus.WithError(err).Fatalf("unable to create deploy")
+	}
+	c := core.New(cfg, dep)
 	if err := c.Remove(context.Background()); err != nil {
 		logrus.WithError(err).Fatalf("unable to remove pipeline")
 	}

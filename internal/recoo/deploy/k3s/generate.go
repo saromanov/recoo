@@ -9,12 +9,9 @@ import (
 )
 
 type K3S struct {
-
+	cfg config.Deploy
 }
 
-func New()*K3S {
-	return &K3S{}
-}
 // Kuber defines struct for generation k3s
 // (kubernetes) file
 type Kuber struct {
@@ -37,7 +34,14 @@ type MatchLabels struct {
 	App string `yaml:"app"`
 }
 
-func (k *K3S) Run() error {
+func New(cfg config.Deploy)*K3S {
+	return &K3S{
+		cfg: cfg,
+	}
+}
+
+
+func (k *K3S) Run(imageURL, imageName string, ports []string) error {
 	return nil
 }
 

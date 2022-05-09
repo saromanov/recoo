@@ -10,6 +10,7 @@ import (
 	"github.com/saromanov/recoo/internal/config"
 	"github.com/saromanov/recoo/internal/recoo/build"
 	"github.com/saromanov/recoo/internal/recoo/deploy/swarm"
+	"github.com/saromanov/recoo/internal/recoo/deploy"
 	"github.com/saromanov/recoo/internal/recoo/release"
 )
 
@@ -18,12 +19,14 @@ var errNoDirName = errors.New("unable to get dir name")
 // Core defines main logic
 type Core struct {
 	cfg *config.Config
+	dep deploy.Deploy
 }
 
 // New provides initalization of Core
-func New(cfg *config.Config) *Core {
+func New(cfg *config.Config, dep deploy.Deploy) *Core {
 	return &Core{
 		cfg: cfg,
+		dep: dep,
 	}
 }
 
@@ -53,7 +56,7 @@ func (c *Core) Start(ctx context.Context) error {
 		return fmt.Errorf("unable to execute release stage: %v", err)
 	}
 	fmt.Println("Executing of the deploy stage")
-	if err := swarm.Run(c.cfg.Deploy, imageURL, dirName, c.cfg.Build.Ports); err != nil {
+	if err := c.dep.Run(imageURL, dirName, c.cfg.Build.Ports); err != nil {
 		return fmt.Errorf("unable to run deploy stage: %v", err)
 	}
 	return nil

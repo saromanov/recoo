@@ -7,8 +7,18 @@ import (
 	"github.com/saromanov/recoo/internal/config"
 )
 
+type Swarm struct {
+	cfg config.Deploy
+}
+
+func New(cfg config.Deploy) *Swarm {
+	return &Swarm{
+		cfg: cfg,
+	}
+}
+
 // Run defines execute of swarm stage
-func Run(cfg config.Deploy, imageURL, imageName string, ports []string) error {
+func (s *Swarm) Run(cfg config.Deploy, imageURL, imageName string, ports []string) error {
 	if err := generateCompose(cfg, imageURL, imageName, ports); err != nil {
 		return err
 	}

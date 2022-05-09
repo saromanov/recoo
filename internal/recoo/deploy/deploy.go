@@ -2,10 +2,10 @@ package deploy
 
 import (
 	"github.com/saromanov/recoo/internal/config"
-	"github.com/saromanov/recoo/internal/deploy/k3s"
+	"github.com/saromanov/recoo/internal/recoo/deploy/k3s"
 )
 type Deploy interface {
-	Run(*config.Deploy) error
+	Run(imageURL, imageName string, ports []string) error
 }
 
 type DeployFactory struct {
@@ -13,9 +13,9 @@ type DeployFactory struct {
 }
 
 // Run provides running of the
-func (d *DeployFactory) Run(dep *config.Deploy) (Deploy, error) {
+func (d *DeployFactory) Run(dep config.Deploy) (Deploy, error) {
 	if dep.Provider == config.K3S {
-		return k3s.New(), nil
+		return k3s.New(dep), nil
 	}
 	return nil, nil
 }
