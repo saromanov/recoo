@@ -24,8 +24,30 @@ type Kuber struct {
 type Spec struct {
 	Replicas uint
 	Selector Selector `yaml:"selector"`
+	Template Template `yaml:"template"`
 }
 
+type SpecContainers struct {
+	Containers []Container `yaml:"containers"`
+}
+
+type Container struct {
+	Name string `yaml:"name"`
+	Image string `yaml:"image"`
+}
+
+type Template struct {
+	Metadata Metadata `yaml:"metadata"`
+	Spec SpecContainers `yaml:"spec"`
+}
+
+type Metadata struct {
+	Labels Labels `yaml:"labels"`
+}
+
+type Labels struct {
+	App string `yaml:"app"`
+}
 type Selector struct {
 	MatchLabels MatchLabels `yaml:"matchLabels"`
 }
@@ -54,7 +76,28 @@ func generateK3S(cfg config.Deploy, imageURL, imageName string, ports []string) 
 			"namespace": "default",
 		},
 		Spec: Spec {
-			Replicas: 1,
+			Replicas: cfg.Replicas,
+			Selector: Selector{
+				MatchLabels: MatchLabels{
+					App: "k3s-demo",
+				},
+			},
+			Template: Template{
+				Metadata: Metadata{
+					Labels: Labels {
+						App: "k3s-demo",
+					},
+				},
+				Spec: SpecContainers{
+					Containers: []Container{
+						{
+							Name: imageName,
+							Image: imageURL,
+						},
+					},
+				},
+			},
+
 		},
 	}
 	out, err := yaml.Marshal(k)

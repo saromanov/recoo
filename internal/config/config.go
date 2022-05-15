@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
-	"strings"
 	"os"
+	"strings"
 
 	"github.com/saromanov/cowrow"
 )
@@ -35,8 +35,9 @@ type Build struct {
 
 // Deploy defines stage for deploy
 type Deploy struct {
-	Provider Provider    `yaml:"provider"`
+	Provider Provider  `yaml:"provider"`
 	Services []Service `yaml:"services"`
+	Replicas uint      `yaml:"replicas"`
 }
 
 // Service defines configuration for service
@@ -78,4 +79,3 @@ func getVariable(data string) string {
 	}
 	return data
 }
-
