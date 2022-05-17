@@ -8,10 +8,6 @@ import (
 	"github.com/saromanov/recoo/internal/config"
 )
 
-type K3S struct {
-	cfg config.Deploy
-}
-
 // Kuber defines struct for generation k3s
 // (kubernetes) file
 type Kuber struct {
@@ -56,16 +52,6 @@ type MatchLabels struct {
 	App string `yaml:"app"`
 }
 
-func New(cfg config.Deploy)*K3S {
-	return &K3S{
-		cfg: cfg,
-	}
-}
-
-
-func (k *K3S) Run(imageURL, imageName string, ports []string) error {
-	return nil
-}
 
 func generateK3S(cfg config.Deploy, imageURL, imageName string, ports []string) error {
 	k := &Kuber{
@@ -104,7 +90,7 @@ func generateK3S(cfg config.Deploy, imageURL, imageName string, ports []string) 
 	if err != nil {
 		return fmt.Errorf("unable to marshal to file: %v", err)
 	}
-	if err := ioutil.WriteFile("docker-compose.yml", out, 0644); err != nil {
+	if err := ioutil.WriteFile("k3s.yml", out, 0644); err != nil {
 		return fmt.Errorf("unable to write to file: %v", err)
 	}
 	return nil
