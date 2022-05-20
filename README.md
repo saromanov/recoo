@@ -1,6 +1,6 @@
 # recoo
 
-Too for quick and easy deployment
+Quick and easy deployment for Go and Python
 
 ## Usage
 
